@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        .container{
+            display: block;
+            position: absolute;
+            width: 100vw;
+            height: 100vh;
+            background-color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container.hide{
+            display: none;
+        }
+        .container .login{
+            width: 500px;
+            height: 300px;
+            border-radius: 20px;
+            box-shadow: 20px 20px 60px rgba(0,0,0,.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .left,
+        .right{
+            width: 50%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        .left{
+            background-color: #AEB1FF;
+        }
+        .left h1{
+            font-family: "Montserrat", "Poppins", sans-serif;
+            font-weight: 500;
+        }
+        .right{
+            position: relative;
+            padding: 30px;
+        }
+        #login-username{
+            width: 100%;
+            height: 30px;
+            font-family: "Montserrat", "Poppins", sans-serif;
+            font-weight: 500;
+            font-size: 18px;
+            text-align: center;
+            border: 1px solid #AEB1FF;
+            border-radius: 30px;
+            outline: none;
+            padding: 0 10px;
+        }
+        #login-btn{
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            bottom: 20px;
+            right: 20px;
+            border-radius: 50%;
+            border: none;
+            outline: none;
+            background-color: #AEB1FF;
+        }
+        #login-btn img{
+            width: 80%;
+            height: 80%;
+        }
+        #login-btn:hover{
+            box-shadow: 3px 3px 10px rgba(0,0,0,.2);
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="login">
+            <div class="left">
+                <h1>Welcome to Chat Box!</h1>
+            </div>
+            <div class="right">
+                <form action="/login" method="POST">
+                    <input id="login-username" type="text" name="username" placeholder="Username">
+                    <button id="login-btn" type="submit">
+                        <img src="./img/arrowright-img.png">
+                    </button>
+                 </form>
+            </div>
+        </div>
+    </div>
+
+    <script
+        src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8="
+        crossorigin="anonymous">
+    </script>
+    <script>
+        let logUser = $('#login-username');
+        let logBtn = $('#login-btn');
+
+        $('form').submit(function(e){
+                if(logUser.val() == 0){
+                alert('Please enter your username')
+                return false;
+            }
+        })
+    </script>
+</body>
+</html>

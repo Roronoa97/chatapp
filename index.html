@@ -1,0 +1,412 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Box</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /*Start Scrollbar Style*/
+        #scrollbar-style::-webkit-scrollbar-track
+        {
+            border-radius: 10px;
+            background-color: #ccceff
+        }
+
+        #scrollbar-style::-webkit-scrollbar
+        {
+            width: 5px;
+        }
+        #scrollbar-style::-webkit-scrollbar-thumb
+        {
+            border-radius: 10px;
+            background-color: #fff;
+        }
+        /*End Scrollbar Style*/
+
+        body{
+            font-family: "Montserrat", "Poppins", sans-serif;
+            background-color: #CCCEFF;
+        }
+        .container{
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .header{
+            width: 100%;
+            height: 60px;
+            background-color: #AEB1FF;
+            box-shadow: 0 3px 60px rgba(0,0,0,.3);
+            padding: 0 100px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+
+        }
+        .main{
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        /* Chat Container */
+        .chat-container{
+            position: relative;;
+        }
+        .chat-contacts{
+            position: absolute;
+            width: 450px;
+            height: 450px;
+            background-color: #fff;
+            clip-path: circle(100% at 0 0);
+            z-index: 999;
+            background-color: #AEB1FF;
+            display: flex;
+            transition: .3s ease-in-out;
+        }
+        .chat-contacts.hide{
+            clip-path: circle(15% at 0 0);
+        }
+        #close{
+            background-color: transparent;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            margin: 10px 20px 10px 10px;
+        }
+        #close img{
+            width: 100%;
+            height: 100%;
+        }
+        #close:hover{
+            background-color: rgba(0,0,0,.1);
+            cursor: pointer;
+            outline: none;
+        }
+        #close:active, 
+        #close:focus{
+            outline: none;
+        }
+        .contact-list{
+            color: #fff;
+        }
+        .contact-list h3{
+            font-family: "Poppins", "Roboto", sans-serif;
+            font-weight: 400;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+        .contact-list ul{
+            list-style: none;
+        }
+        .chat-wrapper{
+            width: 700px;
+            height: 450px;
+            background-color: #EFEFFF;
+            box-shadow: 9px 9px 20px rgba(0,0,0,0.4);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .chat-header{
+            width: 100%;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            background-color: #fff;
+            padding-left: 20px;
+        }
+        .chat-body{
+            flex: 1;
+            margin: 10px 75px 30px 75px;
+            overflow-y: auto;
+        }
+        .chat-messages{
+            padding-right: 10px;
+        }
+        .message{
+            font-family: "Montserrat";
+            font-size: 12px;
+            padding: 2px 0;
+        }
+        .message.sender{
+            font-size: 14px;
+            text-align: right;
+        }
+        .message .chat-sender{
+            font-size: 10px;
+            display: block;
+            padding: 7px 0;
+        }
+        .message .chat-message{
+            display: inline-block;
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 5px 8px;
+        }
+        .message .chat-time{
+            font-size: 8px;
+            font-style: italic;
+        }
+        .noty{
+            text-align: center;
+            margin-bottom: 3px;
+        }
+        .noty span{
+            font-size: 10px;
+            font-style: italic;
+        }
+        .chat-footer{
+            width: 100%;
+            height: 40px;
+            background: #fff;
+            padding-left:75px;
+            padding-right: 75px;
+        }
+        .chat-input{
+            position: relative;
+            bottom: 25px;
+        }
+        .chat-input #input-text{
+            width: 100%;
+            height: 40px;
+            border-radius: 20px;
+            border: none;
+            outline: none;
+            box-shadow: 0px 7px 20px rgba(0,0,0,.3);
+            font-size: 14px;
+            font-family: "Montserrat";
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+        .chat-input #input-btn{
+            width: 40px;
+            height: 40px;
+            position: absolute;
+            right: -50;
+            border-radius: 50%;
+            background-color: #fff;
+            border: none;
+            outline: none;
+            box-shadow: 0px 7px 20px rgba(0,0,0,.3);
+        }
+        #input-btn img{
+            width: 50%;
+            height: 50%;
+        }
+        .notification{
+            position: absolute;
+            bottom: 50px;
+            right: 50px;
+            width: 150px;
+            height: 40px;
+            background-color: #1b1b1b;
+            box-shadow: 2px 2px 10px rgba(0,0,0,.3);
+            text-align: center;
+            opacity: 1;
+            animation: show 5s ease;
+        }
+        .notification small{
+            font-family: "Montserrat", "Poppins", sans-serif;
+            font-size: 10px;
+            font-style: italic;
+            line-height: 40px;
+            color: white;
+        }
+        @keyframes show{
+            0%{
+                bottom: 50px;
+                right: 0;
+                opacity: 0;
+            }
+            50%{
+                bottom: 50px;
+                right: 50px;
+                opacity: 1;
+            }
+            100%{
+                bottom: 100px;
+                right: 50px;
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header"></div>
+        <div class="main">
+            <div class="chat-container">
+                <div class="chat-contacts hide">
+                    <div class="close-container">
+                        <button id="close">
+                            <img src="./img/burger.png">
+                        </button>
+                    </div>
+                    <div class="contact-list">
+                        <h3>Participants</h3>
+                        <ul></ul>
+                    </div>
+                </div>
+                <div class="chat-wrapper">
+                    <div class="chat-header">
+                    </div>
+                    <div id="scrollbar-style" class="chat-body">
+                        <div class="chat-messages">
+                            
+                        </div>
+                    </div>
+                    <div class="chat-footer">
+                        <div class="chat-input">
+                            <form>
+                                <input id="input-text" placeholder="Type something here">
+                                <button id="input-btn">
+                                    <img src="./img/send-img.png">
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.9.3/qs.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script
+        src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8="
+        crossorigin="anonymous">
+    </script>
+
+    <script>
+        $(document).ready(function(){
+
+            let socket = io();
+            let chatBody = $('.chat-body');
+
+            //retrieve username from the url
+            const username = Qs.parse(location.search, {
+                ignoreQueryPrefix: true
+            })
+
+            //toggle contact list
+            let close = $('#close');
+            let contactsContainer = $('.chat-contacts');
+
+            close.on('click', function(){
+                contactsContainer.toggleClass('hide');
+            })
+
+            socket.emit('user join', username.username);
+
+            socket.on('user join', function(user){
+                $('.main').append(`<div class="notification"><small>${user}</small></div>`);
+                setTimeout(function(){
+                    $('.notification').remove();
+                }, 
+                5000);
+                
+            });
+
+            socket.on('user list', function(users){
+                $('.contact-list ul li').remove();
+                let userlist = ''
+                $.each(users, function(i, value){
+                    userlist += `<li>${value.username}</li>`
+                });
+                $('.contact-list ul').append(userlist); 
+            });
+
+            $('.profile').click(function(){
+                $('.profile-setting').toggleClass('active');
+            });
+
+            $('form').submit(function(e){
+                e.preventDefault();
+                // if($('#input-text').keypress(function(){
+                //     console.log('typing')
+                // }))
+                if($('#input-text').val() != 0){
+                    let input = $('#input-text').val();
+                    let date = new Date();
+
+                    let data = {
+                        msg: input,
+                        username: username.username
+                    }
+                    socket.emit('data send', data);
+
+                    let message = `<div id="${data.username}" class="message sender">
+                                    <span class="chat-message">${data.msg}</span>
+                                   </div>`
+
+                    $('.chat-messages').append(message);
+                    chatBody.scrollTop(chatBody.prop("scrollHeight"))
+
+                    $('#input-text').val('');
+                }
+            });
+
+            
+
+            socket.on('data receive', function(data){
+                let message = '';
+                if($('.message:last-child').attr('id') === data.username){
+                    message = `<div id="${data.username}" class="message">
+                                <span class="chat-message">${data.msg}</span>
+                                <span class="chat-time">${data.date}</span>
+                            </div>`
+                }
+                else{
+                    message = `<div id="${data.username}" class="message">
+                                <span class="chat-sender">${data.username}</span>
+                                <span class="chat-message">${data.msg}</span>
+                                <span class="chat-time">${data.date}</span>
+                            </div>`
+                }
+
+                $('.chat-messages').append(message);
+                chatBody.scrollTop(chatBody.prop("scrollHeight"))
+            });
+
+            socket.on('messages', function(data){
+                let message = '';
+                for(let i = 0; i < data.length; i++){
+                    if(data[i].username == username.username){
+                        message = `<div id="${data[i].username}" class="message sender">
+                                    <span class="chat-message">${data[i].msg}</span>
+                                   </div>`
+                        $('.chat-messages').append(message);
+                    }
+                    else{
+                        if($('.message:last-child').attr('id') === data[i].username){
+                            message = `<div id="${data[i].username}" class="message">
+                                        <span class="chat-message">${data[i].msg}</span>
+                                        <span class="chat-time">${data[i].date}</span>
+                                    </div>`
+                        }
+                        else{
+                            message = `<div id="${data[i].username}" class="message">
+                                        <span class="chat-sender">${data[i].username}</span>
+                                        <span class="chat-message">${data[i].msg}</span>
+                                        <span class="chat-time">${data[i].date}</span>
+                                    </div>`
+                        }
+                        $('.chat-messages').append(message);
+                    }
+                }
+                chatBody.scrollTop(chatBody.prop("scrollHeight"))
+            });
+        })
+    </script>
+</body>
+</html>
